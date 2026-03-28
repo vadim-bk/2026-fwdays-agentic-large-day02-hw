@@ -1,0 +1,48 @@
+---
+description: "Testing workflow, Vitest usage, and quality bar for Excalidraw"
+globs: **/*.test.ts,**/*.test.tsx,vitest.config.mts
+alwaysApply: false
+---
+
+# Testing
+
+## Runner and config
+
+- Unit and integration tests use **Vitest** (`vitest.config.mts` at repo root).
+- Path aliases match app code; prefer existing test utilities and helpers over ad-hoc setup.
+
+## Commands (repo root)
+
+| Command | Use |
+|--------|-----|
+| `yarn test` / `yarn test:app` | Watch mode during development |
+| `yarn test:app --watch=false` | Single run, no watch |
+| `yarn test:update` | Refresh snapshots (`--update` on Vitest) — run before commit when snapshots are intentionally changed |
+| `yarn test:typecheck` | TypeScript (`tsc`) |
+| `yarn test:all` | Full gate: typecheck, eslint, prettier, app tests (no watch) |
+| `yarn test:coverage` | Coverage report |
+
+Prefer `yarn test:update` when the project standard is to align snapshots before committing (see `AGENTS.md`).
+
+## Where tests live
+
+- **Colocated**: `ComponentName.test.tsx` next to the component (preferred for components; see `conventions.mdc`).
+- **Package suites**: e.g. `packages/excalidraw/tests/`, `packages/element/tests/`, `excalidraw-app/tests/` for broader scenarios.
+
+Follow the pattern already used in the nearest directory.
+
+## Quality bar
+
+- Do not delete or gut assertions to make tests pass; fix behavior or update snapshots only when the new output is correct.
+- Do not use `@ts-ignore` or `any` in tests to hide type problems.
+- If you change rendering or UI that affects snapshots, run `yarn test:update` and review diffs carefully.
+
+## Protected areas
+
+Changes under protected files (see `do-not-touch.mdc`) require the full test suite and manual verification — treat regressions there as high risk.
+
+## How to verify
+
+- From the repo root, run `yarn test:typecheck` and `yarn test:update` (or `yarn test:app --watch=false` when you are not updating snapshots).
+- Before commit, prefer `yarn test:all` when you want the full gate (typecheck, lint, format check, tests).
+- If snapshots changed, re-read the snapshot diffs to ensure only intended visual or output changes are recorded.

@@ -1,0 +1,43 @@
+---
+description: "Security expectations for untrusted input, links, embeds, and secrets"
+alwaysApply: true
+---
+
+# Security
+
+## Secrets and configuration
+
+- Never commit API keys, tokens, passwords, or private URLs. Use environment variables and local-only config files that are gitignored.
+- Do not log or echo sensitive values in client-visible errors or analytics.
+
+## Treat scene and file data as untrusted
+
+- `.excalidraw` / JSON payloads may come from anywhere. Parsing and restore paths must stay defensive; do not assume well-formed or benign content.
+- When changing how links are stored or rendered, keep or extend existing normalization (`normalizeLink` in `@excalidraw/common`, built on `sanitizeUrl`). New `href` / navigation surfaces should follow the same patterns as `Hyperlink` and static SVG export.
+
+## URLs, HTML, and script-like vectors
+
+- Block or sanitize dangerous URL schemes (`javascript:`, etc.) via established helpers — see `packages/common/src/url.ts` and tests in `packages/common/tests/url.test.tsx`.
+- Avoid introducing new `dangerouslySetInnerHTML` (or equivalent raw HTML injection). If unavoidable, the input must be strictly controlled or sanitized; treat any new usage as a security review item.
+
+## Embeds and third-party content
+
+- Embeddable elements use iframes with sandbox and related attributes. Do not relax sandbox flags, `allow` lists, or `src`/`srcDoc` handling without explicit security review — that directly affects XSS and origin isolation.
+
+## Dependencies and supply chain
+
+- No new npm packages without explicit approval (`architecture.mdc`). Prefer existing utilities; vet licenses and maintenance when adding dependencies.
+
+## Network and collaboration
+
+- Prefer HTTPS for remote endpoints. When handling redirects or user-supplied URLs, consider open redirects and token leakage; follow patterns already used in the app for collab and sharing.
+
+## When in doubt
+
+- Extend tests for sanitization and parsing when behavior changes (see existing URL tests). Escalate unclear trust boundaries instead of guessing.
+
+## How to verify
+
+- Run `yarn test:all` or at least `packages/common` URL-related tests after changing URL, link, embed, or sanitization code (`packages/common/tests/url.test.tsx` and any new tests you add).
+- Search the diff for secrets (`grep` / IDE search for key-like strings), new `dangerouslySetInnerHTML`, relaxed iframe `sandbox`/`allow`, or new dependencies; confirm none violate this rule without review.
+- For link or navigation changes, exercise the same flows covered by `Hyperlink` / SVG export patterns and any added tests manually if automated coverage is thin.
