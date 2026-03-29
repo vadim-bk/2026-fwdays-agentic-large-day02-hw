@@ -28,7 +28,7 @@ Minimum requirements implied by the repo/CI:
 
 ```bash
 git clone <your-fork-or-upstream-url>
-cd 2026-fwdays-agentic-large-day01-hw
+cd 2026-fwdays-agentic-large-day02-hw
 ```
 
 Verify you’re at the monorepo root:

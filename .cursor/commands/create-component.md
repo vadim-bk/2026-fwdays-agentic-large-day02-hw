@@ -31,3 +31,5 @@ After implementation, run **`yarn test:typecheck`**; run **`yarn test:update`** 
 ## Ask if unclear
 
 If the user did not specify: public API (props), where it mounts, accessibility expectations, or translations — ask briefly before coding.
+
+**Example:** `/create-component` (name `Button`, library UI) → `packages/excalidraw/components/Button.tsx`, `packages/excalidraw/components/Button.test.tsx`.

@@ -15,7 +15,7 @@ alwaysApply: false
 ## Rendering
 
 - Canvas 2D rendering — NOT React DOM for drawing
-- Render pipeline: Scene → renderScene() → canvas context
+- Render pipeline: Scene → `renderStaticScene(renderConfig)` (static canvas) and `renderInteractiveScene(renderConfig)` (selection/UI overlay); each takes a typed `renderConfig` and draws to the canvas 2D context (`packages/excalidraw/renderer/`)
 - DO NOT use react-konva, fabric.js, pixi.js
 
 ## Dependencies

@@ -18,7 +18,10 @@ Triggered by: "update memory bank", "sync docs",
 
 ## Steps
 
-1. Run `git diff --stat HEAD~5` to identify recent changes
+1. Identify what changed (prefer **staged + working tree** over history; do not use `HEAD~5` while there is an active diff):
+   a. Run `git diff --staged --stat` and `git diff --stat` (unstaged vs index).
+   b. If **either** output is **non-empty**, base the summary on current work: use the non-empty output(s), or a single `git diff --stat HEAD` if **both** are non-empty so staged and unstaged changes are not mixed up or omitted.
+   c. **Only if both** (a) outputs are **empty** (clean index and working tree), fall back to `git diff --stat HEAD~5` for recent committed history.
 2. Read relevant Memory Bank files in `docs/memory/`
 3. For each changed area, update the matching file:
    - New feature -> `progress.md` + `activeContext.md`
