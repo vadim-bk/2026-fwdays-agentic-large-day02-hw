@@ -9,8 +9,8 @@ alwaysApply: false
 ## State Management
 
 - Custom state via actionManager — NOT Redux/Zustand/MobX
-- State updates: actionManager.dispatch() ONLY
-- State type: AppState (packages/excalidraw/types.ts)
+- State updates: use `ActionManager.executeAction()` to run actions; `ActionManager.handleKeyDown()` handles keyboard shortcuts — both in `packages/excalidraw/actions/manager.tsx` (internal updates go through the manager’s `updater`; there is no `dispatch()`).
+- State type: `AppState` (`packages/excalidraw/types.ts`)
 
 ## Rendering
 
@@ -27,4 +27,4 @@ alwaysApply: false
 
 - Run `yarn test:typecheck` from the repo root after structural or import changes.
 - Review the diff for new state libraries (Redux, Zustand, MobX, etc.), canvas abstraction libraries (react-konva, fabric, pixi), or new `package.json` dependencies without documented approval.
-- Confirm state mutations go through `actionManager.dispatch()` and drawing stays on the canvas pipeline rather than DOM-based “drawing” libraries.
+- Confirm state mutations go through `ActionManager` (`executeAction`, `handleKeyDown`, and UI code paths that use the same updater — see `packages/excalidraw/actions/manager.tsx`) and drawing stays on the canvas pipeline rather than DOM-based “drawing” libraries.
